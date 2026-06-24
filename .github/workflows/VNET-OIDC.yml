@@ -46,4 +46,4 @@
               # Specifies the resource group name. Required if the 'scope' parameter is 'resourceGroup'.
               resource-group-name: RG-iac-Robert
               # Specifies the path to the template file.
-              template-file: ./.biceps/VNet.bicep
+              template-file: ./.bicep/VNet.bicep
