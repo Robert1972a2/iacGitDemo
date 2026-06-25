@@ -1,0 +1,13 @@
+# test*       # Ignore all files that start with "test" in the directory
+#             # where the .gitignore file is located
+# 
+# docu/       # Ignore the entire "docu" directory and all its contents
+# 
+# docu/*.pdf  # Ignore all PDF files in the "testing" directory
+# 
+#  /*         # Ignore all files with any extension
+#             # of that directory in which the .gitignore file is located
+# 
+# **/docu*    # Ignore all files and directories that start with "docu" in any directory 
+# 
+# **/docu/    # Ignore all directories named "documentation" and their contents in any directory

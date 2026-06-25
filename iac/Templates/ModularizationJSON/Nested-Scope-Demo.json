@@ -1,0 +1,58 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ExpressionEvaluationScope": {
+            "type": "string",
+            "allowedValues": [
+                "outer",
+                "inner"
+            ],
+            "metadata": {
+                "description": "Specifies the scope for expression evaluation in the nested deployment."
+            }
+
+        }
+    },
+    "variables": {
+        "testVariable": "outer"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2024-11-01",
+            "name": "nestedDeployment",
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "[parameters('ExpressionEvaluationScope')]"
+                },
+                "parameters": {},
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "functions": [],
+                    "variables": {
+                        "testVariable": "inner"
+                    },
+                    "resources": [
+                        
+                    ],
+                    "outputs": {
+                        "Result": {
+                            "type": "string",
+                            "value": "[variables('testVariable')]"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "Result_Parent": {
+            "type": "string",
+            "value": "[reference('nestedDeployment').outputs.Result.value]"
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "nestedDeployment",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {},
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "functions": [],
+                    "variables": {},
+                    "resources": [
+                        {
+                            "name": "iac-AutomationAccount-nested",
+                            "type": "Microsoft.Automation/automationAccounts",
+                            "apiVersion": "2024-10-23",
+                            "location": "[resourceGroup().location]",
+                            "tags": {},
+                            "properties": {
+                                "sku": {
+                                    "name": "Free"
+                                },
+                                "publicNetworkAccess": false
+                            }
+                        }
+                        ],
+                    "outputs": {}
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

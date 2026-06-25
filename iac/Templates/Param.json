@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.43.8.12551",
+      "templateHash": "3346672330524719459"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "defaultValue": "iac-Demo",
+      "maxLength": 16
+    },
+    "qty": {
+      "type": "int",
+      "defaultValue": 4,
+      "minValue": 1,
+      "maxValue": 8
+    },
+    "ipAddresses": {
+      "type": "array",
+      "metadata": {
+        "description": "List of IP addresses to allow access from"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "config": {
+      "type": "object",
+      "defaultValue": {
+        "kind": "StorageV2",
+        "sku": "Standard_LRS"
+      }
+    }
+  },
+  "resources": [],
+  "outputs": {
+    "iacName": {
+      "type": "string",
+      "value": "[parameters('name')]"
+    },
+    "iacQty": {
+      "type": "int",
+      "value": "[parameters('qty')]"
+    },
+    "iacConfig": {
+      "type": "object",
+      "value": "[parameters('config')]"
+    },
+    "iacConfigKind": {
+      "type": "string",
+      "value": "[parameters('config').kind]"
+    },
+    "iacConfigSku": {
+      "type": "string",
+      "value": "[parameters('config').sku]"
+    },
+    "iacPWD": {
+      "type": "string",
+      "value": "[parameters('adminPassword')]"
+    },
+    "iacIPs": {
+      "type": "array",
+      "value": "[parameters('ipAddresses')]"
+    },
+    "iacIP1": {
+      "type": "string",
+      "value": "[parameters('ipAddresses')[0]]"
+    }
+  }
+}

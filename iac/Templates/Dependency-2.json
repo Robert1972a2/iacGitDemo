@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {
+        "idSubnet": "[extensionResourceId(resourceGroup().id, 'Microsoft.Network/virtualNetworks/subnets', 'iac-VNet-Spoke-1', 'SubnetTier1')]",
+        "idVNet": "[extensionResourceId(resourceGroup().id, 'Microsoft.Network/virtualNetworks', 'iac-VNet-Spoke-1')]"
+
+    },
+    "resources": [
+        {
+            "name": "iac-NIC-2",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2024-05-01",
+            "location": "[resourceGroup().location]",
+            
+            "dependsOn": [
+                
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipConfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'iac-VNet-Spoke-1', 'SubnetTier1')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "ResourceIDSubnet": {
+            "type": "string",
+            "value": "[variables('idSubnet')]"
+        },
+        "ResourceIDVNet": {
+            "type": "string",
+            "value": "[variables('idVNet')]"
+        }
+    }
+}

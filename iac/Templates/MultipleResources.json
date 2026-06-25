@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LAWSCount": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Number of log analytics workspaces to create."
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2023-09-01",
+            "name": "[concat('iac-workspace-', copyIndex(1))]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "workspaceCopy",
+                "count": "[parameters('LAWSCount')]"
+            },
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

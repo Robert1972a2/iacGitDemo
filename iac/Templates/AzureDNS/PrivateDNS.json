@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.44.1.10279",
+      "templateHash": "15039655697103190275"
+    }
+  },
+  "parameters": {
+    "DomainName": {
+      "type": "string",
+      "defaultValue": "demo.local"
+    },
+    "VNetName": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/privateDnsZones",
+      "apiVersion": "2024-06-01",
+      "name": "[parameters('DomainName')]",
+      "location": "Global",
+      "properties": {}
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2024-06-01",
+      "name": "[format('{0}/{1}', parameters('DomainName'), format('linked-to-{0}', parameters('VNetName')))]",
+      "location": "Global",
+      "properties": {
+        "registrationEnabled": true,
+        "virtualNetwork": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('VNetName'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('DomainName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/A",
+      "apiVersion": "2024-06-01",
+      "name": "[format('{0}/{1}', parameters('DomainName'), 'test-a')]",
+      "properties": {
+        "ttl": 3600,
+        "aRecords": [
+          {
+            "ipv4Address": "9.6.3.1"
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('DomainName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/privateDnsZones/CNAME",
+      "apiVersion": "2024-06-01",
+      "name": "[format('{0}/{1}', parameters('DomainName'), 'test-b')]",
+      "properties": {
+        "ttl": 3600,
+        "cnameRecord": {
+          "cname": "www.iac.net"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('DomainName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "VNetID": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('VNetName'))]"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+# This is a basic workflow that is manually triggered
+
+name: IaC - VNet with Parameters
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      VNetName:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'VNet Name'
+        # Default value if no value is explicitly provided
+        default: 'iac-VNet-Hub'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+      NICCount:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Number of NICs to create'
+        # Default value if no value is explicitly provided
+        default: 1
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: number
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "deployVNet"
+  deployVNet:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: RepoCheckout
+        uses: actions/checkout@v6.0.0
+        
+      - name: Azure Login
+        uses: Azure/login@v3
+        with:
+          creds: ${{ secrets.AZ_IAC_SP }}
+
+      - name: DeployBicep
+        uses: Azure/bicep-deploy@v2.3.0
+        with:
+          # Specifies the execution type, which can be either 'deployment' or 'deploymentStack'.
+          type: deployment
+          # Specifies the Azure subscription ID to which the deployment will be applied.
+          subscription-id: 097d177e-53e4-4f46-8807-96576bb5dde0
+          # Specifies the operation to perform. For deployment, choose from 'create', 'validate', 'whatIf'. For deploymentStack, choose from 'create', 'delete', 'validate'.
+          operation: create
+          # Specifies the scope of the deployment or deploymentStack. For deployment, choose from 'resourceGroup', 'subscription', 'managementGroup', 'tenant'. For deploymentStack, choose from 'resourceGroup', 'subscription', 'managementGroup'.
+          scope: resourceGroup 
+          # Specifies the name of the deployment or deploymentStack.
+          name: ghaDeploment
+          # Specifies the resource group name. Required if the 'scope' parameter is 'resourceGroup'.
+          resource-group-name: RG-IaC-Preparation
+          # Specifies the path to the template file.
+          template-file: ./.biceps/VNetParameters.bicep
+          # Specifies the inline parameters to use (as json object).
+          parameters: |
+            VNetName: ${{ github.event.inputs.VNetName }}
+            NICCount: ${{ github.event.inputs.NICCount }}
+          

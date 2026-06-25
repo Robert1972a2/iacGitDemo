@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AccountSKU": {
+            "type": "string",
+            "defaultValue": "Free",
+            "allowedValues": [
+                "Free",
+                "Basic"
+            ]
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "nestedDeployment",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                    "AutoAccountName": {
+                        "value": "iac-AutomationAccount-nested"
+                    },
+                    "skuName": {
+                        "value": "[parameters('AccountSKU')]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "AutoAccountName": {
+                            "type": "string",
+                            "metadata": {
+                                "description": "Name of the Automation Account to create."
+                            }
+                        },
+                        "skuName": {
+                            "type": "string"
+                        }
+                    },
+                    "functions": [],
+                    "variables": {},
+                    "resources": [
+                        {
+                            "name": "[parameters('AutoAccountName')]",
+                            "type": "Microsoft.Automation/automationAccounts",
+                            "apiVersion": "2024-10-23",
+                            "location": "[resourceGroup().location]",
+                            "tags": {},
+                            "properties": {
+                                "sku": {
+                                    "name": "[parameters('skuName')]"
+                                },
+                                "publicNetworkAccess": false
+                            }
+                        }
+                    ],
+                    "outputs": {
+                        "output1": {
+                            "type": "string",
+                            "value": "[parameters('skuName')]"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

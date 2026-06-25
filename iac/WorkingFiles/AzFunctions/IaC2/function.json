@@ -1,0 +1,27 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "Request",
+      "methods": [
+        "get",
+        "post"
+      ],
+      "route": "IaC2/{name}"
+    },
+    {
+      "type": "blob",
+      "direction": "in",
+      "name": "InputBlob",
+      "path": "samples/{name}",
+      "connection": "trgsa_STORAGE"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "Response"
+    }
+  ]
+}
